@@ -1,5 +1,5 @@
 class Trie < Hash
-  DEFAULT_DICTIONARY_PATH = File.expand_path(File.join(*%w[usr share dict web2]))
+  DEFAULT_DICTIONARY_PATH = File.expand_path(File.join(*%w[/ usr share dict web2]))
 
   def initialize
     super
