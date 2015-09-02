@@ -14,6 +14,11 @@ class Trie < Hash
     word.each_char.inject(self) { |trie, char| trie && trie.fetch(char, nil) }
   end
 
+  def contains?(word)
+    subtrie = get(word)
+    !!subtrie && subtrie == self.class.new
+  end
+
   def self.from_dict(path = DEFAULT_DICTIONARY_PATH)
     File.open(path) do |file|
       file.each_line.each_with_object(new) do |line, memo|

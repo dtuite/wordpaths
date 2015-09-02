@@ -26,6 +26,22 @@ describe Trie do
     end
   end
 
+  describe "#contains?" do
+    before { subject.put('hello') }
+
+    it "returns true if a word occupies a full branch" do
+      expect(subject.contains?('hello')).to eq(true)
+    end
+
+    it "returns false if a word doesn't fill a branch" do
+      expect(subject.contains?('hel')).to eq(false)
+    end
+
+    it "returns false if a word is longer than a branch" do
+      expect(subject.contains?('hellooo')).to eq(false)
+    end
+  end
+
   describe "::from_dict" do
     let(:dict_path) { File.expand_path(File.join(*%w[spec fixtures words])) }
     subject { described_class.from_dict(dict_path) }
