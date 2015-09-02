@@ -6,9 +6,12 @@ class Trie < Hash
   end
 
   def put(word)
-    word.each_char.inject(self) do |memo, char|
-      memo[char] ||= self.class.new
-    end
+    word.each_char.inject(self) { |trie, char| trie[char] ||= self.class.new }
+  end
+
+  def get(word)
+    return unless word
+    word.each_char.inject(self) { |trie, char| trie && trie.fetch(char, nil) }
   end
 
   def self.from_dict(path = DEFAULT_DICTIONARY_PATH)

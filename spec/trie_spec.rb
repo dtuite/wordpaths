@@ -1,5 +1,4 @@
-require "rspec"
-require "awesome_print"
+require_relative "spec_helper"
 require_relative "../trie"
 
 describe Trie do
@@ -10,9 +9,20 @@ describe Trie do
   end
 
   describe "#put" do
-    it "puts items in the tree" do
+    it "puts items in the tree branches" do
       subject.put('he')
       expect(subject['h']).to eq('e' => described_class.new)
+    end
+  end
+
+  describe "#get" do
+    it "plucks from branches of the tree" do
+      subject.put('hel')
+      expect(subject.get('he')).to eq({ 'l' => {} })
+    end
+
+    it "deals with nil words" do
+      expect(subject.get(nil)).to eq(nil)
     end
   end
 
