@@ -1,28 +1,30 @@
 require_relative "spec_helper"
-require_relative "../trie"
+require_relative "../lib/trie"
 
 describe Trie do
   describe "#initialize" do
-    it "doesn't allow passing arguments" do
+    it "doesn't allow passing regular Hash arguments" do
       expect { described_class.new(0) }.to raise_error(ArgumentError)
+    end
+
+    it "supports specified branch endings" do
+      subject = described_class.new(branch_end_key: 'a')
+      subject.put('hl')
+      expect(subject.get('h')).to eq('l' => { 'a' => nil })
     end
   end
 
   describe "#put" do
     it "puts items in the tree branches" do
       subject.put('he')
-      expect(subject['h']).to eq('e' => described_class.new)
+      expect(subject['h']).to eq('e' => { nil => nil })
     end
   end
 
   describe "#get" do
     it "plucks from branches of the tree" do
       subject.put('hel')
-      expect(subject.get('he')).to eq({ 'l' => {} })
-    end
-
-    it "deals with nil words" do
-      expect(subject.get(nil)).to eq(nil)
+      expect(subject.get('he')).to eq('l' => { nil => nil })
     end
   end
 
@@ -31,6 +33,11 @@ describe Trie do
 
     it "returns true if a word occupies a full branch" do
       expect(subject.contains?('hello')).to eq(true)
+    end
+
+    it "returns true if a sub-word is put in the tree" do
+      subject.put('hell')
+      expect(subject.contains?('hell')).to eq(true)
     end
 
     it "returns false if a word doesn't fill a branch" do
@@ -56,6 +63,15 @@ describe Trie do
 
     it "chomps lines" do
       expect(subject['a']['b']["\n"]).to be_nil
+    end
+  end
+
+  describe "#neighbors_by_substitution" do
+    it "finds neighboring words by substituting letters" do
+      dict_path = File.expand_path(File.join(*%w[spec fixtures first_3000_words]))
+      trie = Trie.from_dict(dict_path)
+      subject = trie.neighbors_by_substitution("able")
+      expect(subject.next).to eq('acle')
     end
   end
 end

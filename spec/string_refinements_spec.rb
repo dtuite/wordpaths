@@ -1,12 +1,12 @@
 require "spec_helper"
-require_relative "../string_refinements"
+require_relative "../lib/string_refinements"
 
 describe StringRefinements do
-  using StringRefinements
+  using described_class
 
-  describe "#tokenize_by_char" do
+  describe "#split_before_each_char" do
     it "splits a word into adjacent tokens" do
-      expect('abc'.tokenize_by_char).to eq([
+      expect('abc'.split_before_each_char).to eq([
         ['', 'abc'],
         ['a', 'bc'],
         ['ab', 'c'],
@@ -15,9 +15,9 @@ describe StringRefinements do
     end
   end
 
-  describe "tokenize_by_pivot" do
+  describe "#split_around_each_char" do
     it "splits a word with one char in the middle" do
-      expect('abc'.tokenize_by_pivot).to eq([
+      expect('abc'.split_around_each_char).to eq([
         ['', 'a', 'bc'],
         ['a', 'b', 'c'],
         ['ab', 'c', '']
@@ -25,7 +25,7 @@ describe StringRefinements do
     end
 
     it "splits words which have repeated letters" do
-      expect('abcbc'.tokenize_by_pivot).to eq([
+      expect('abcbc'.split_around_each_char).to eq([
         ['', 'a', 'bcbc'],
         ['a', 'b', 'cbc'],
         ['ab', 'c', 'bc'],

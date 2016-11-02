@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require_relative "../lib/searcher"
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: ./scripts/paths cat dog [options]"
+
+  options[:dictionary] = File.join('/', 'usr', 'share', 'dict', 'words')
+
+  opts.on('-d/path/to/dict/file', '--dict=/path/to/dictionary/file', "Path to dictionary file:") do |d|
+    options[:dictionary] = d
+  end
+end.parse!(ARGV)
+
+searcher = Searcher.new(Trie.from_dict(options.fetch(:dictionary)))
+if result = searcher.search(start: ARGV[0], goal: ARGV[1])
+  p result.join(' --> ')
+end
